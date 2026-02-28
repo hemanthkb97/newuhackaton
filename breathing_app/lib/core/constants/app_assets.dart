@@ -17,6 +17,7 @@ class AppAssets {
   static const darkSmallCloud1 = 'assets/svg/dark_small_cloud_1.svg';
   static const darkSmallCloud2 = 'assets/svg/dark_small_cloud_2.svg';
   static const stars = 'assets/svg/stars.svg';
+  static const stars2 = 'assets/svg/star2.svg';
 
   // Lottie
   static const successLottie = 'assets/lottie/success.lottie';

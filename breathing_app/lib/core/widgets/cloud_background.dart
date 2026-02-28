@@ -50,6 +50,22 @@ class CloudBackground extends StatelessWidget {
         else
           ..._buildLightClouds(context),
 
+        if (isDark)
+          Positioned.fill(
+            top: -40,
+            child: IgnorePointer(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: SvgPicture.asset(
+                  AppAssets.stars2,
+                  width: 700,
+                  height: 500,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ),
+          ),
+
         Positioned.fill(child: child),
 
         if (isDark)
