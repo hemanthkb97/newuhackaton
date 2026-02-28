@@ -13,7 +13,7 @@ import 'presentation/screens/result_screen.dart';
 import 'presentation/screens/setup_screen.dart';
 
 final _router = GoRouter(
-  initialLocation: '/result',
+  initialLocation: '/',
   routes: [
     ShellRoute(
       builder: (context, state, child) => AppShell(state: state, child: child),

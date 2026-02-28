@@ -133,9 +133,14 @@ class BreathingBloc extends Bloc<BreathingEvent, BreathingState> {
     }
   }
 
-  void _playChime() {
+  Future<void> _playChime() async {
     if (_session.soundEnabled) {
-      _audioPlayer.play(AssetSource('audio/chime.mp3'));
+      try {
+        await _audioPlayer.stop();
+        await _audioPlayer.play(AssetSource('audio/chime.mp3'));
+      } catch (_) {
+        // Web browsers may block audio if context not unlocked
+      }
     }
   }
 

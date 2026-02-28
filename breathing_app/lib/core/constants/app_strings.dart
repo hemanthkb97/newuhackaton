@@ -55,4 +55,5 @@ class AppStrings {
       'Great rounds of calm, just like that. Your mind thanks you.';
   static const startAgain = 'Start again';
   static const backToSetUp = 'Back to set up';
+  static const backHome = 'Back Home';
 }

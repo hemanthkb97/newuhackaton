@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:breathing_app/core/constants/app_assets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,6 +24,7 @@ class SetupScreen extends StatelessWidget {
         return Scrollbar(
           thumbVisibility: true,
           child: SingleChildScrollView(
+            primary: true,
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -150,10 +152,12 @@ class _AdvancedTimingSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _SectionLabel(
-                title: AppStrings.advancedTiming,
-                subtitle: AppStrings.advancedTimingSubtitle,
-                isDark: isDark,
+              Expanded(
+                child: _SectionLabel(
+                  title: AppStrings.advancedTiming,
+                  subtitle: AppStrings.advancedTimingSubtitle,
+                  isDark: isDark,
+                ),
               ),
               AnimatedRotation(
                 turns: state.advancedOpen ? 0.5 : 0,
@@ -413,12 +417,14 @@ class _SoundToggleState extends State<_SoundToggle> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _SectionLabel(
-          title: AppStrings.sound,
-          subtitle: AppStrings.soundSubtitle,
-          isDark: widget.isDark,
+        Expanded(
+          child: _SectionLabel(
+            title: AppStrings.sound,
+            subtitle: AppStrings.soundSubtitle,
+            isDark: widget.isDark,
+          ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(width: 10),
         Switch(
           value: widget.enabled,
           onChanged: (_) => _onToggle(),
@@ -440,10 +446,25 @@ class _SoundToggleState extends State<_SoundToggle> {
     final wasEnabled = widget.enabled;
     context.read<SetupCubit>().toggleSound();
     if (!wasEnabled) {
-      await _player.stop();
-      await _player.play(AssetSource('audio/chime.mp3'));
+      try {
+        await _player.stop();
+        await _player.play(AssetSource('audio/chime.mp3'));
+      } catch (_) {
+        // Web browsers may block audio playback
+      }
     }
   }
+}
+
+void _unlockWebAudio() async {
+  try {
+    final player = AudioPlayer();
+    await player.setVolume(0);
+    await player.play(AssetSource('audio/chime.mp3'));
+    await Future.delayed(const Duration(milliseconds: 100));
+    await player.stop();
+    player.dispose();
+  } catch (_) {}
 }
 
 class _StartButton extends StatelessWidget {
@@ -461,8 +482,13 @@ class _StartButton extends StatelessWidget {
         color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
       ),
       child: ElevatedButton(
-        onPressed: () => context.go('/get-ready'),
-
+        onPressed: () {
+          // Unlock web audio context during this user gesture
+          if (kIsWeb) {
+            _unlockWebAudio();
+          }
+          context.go('/get-ready');
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,

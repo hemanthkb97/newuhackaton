@@ -103,38 +103,51 @@ class _GetReadyView extends StatelessWidget {
           context.go('/breathing');
         }
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BlocBuilder<CountdownCubit, int>(
-            builder: (context, count) {
-              return _CountdownCircle(count: count, isDark: isDark);
-            },
-          ),
-          const SizedBox(height: 53),
-          Text(
-            AppStrings.getReady,
-            style: TextStyle(
-              fontSize: 24,
-              height: 1.5,
-              fontWeight: FontWeight.bold,
-              color: isDark
-                  ? AppColors.darkTextPrimary
-                  : AppColors.lightPrimary,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            AppStrings.getReadySubtitle,
-            style: TextStyle(
-              fontSize: 14,
-              height: 1.5,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
-          ),
-        ],
+      child: Scrollbar(
+        thumbVisibility: true,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              primary: true,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BlocBuilder<CountdownCubit, int>(
+                      builder: (context, count) {
+                        return _CountdownCircle(count: count, isDark: isDark);
+                      },
+                    ),
+                    const SizedBox(height: 53),
+                    Text(
+                      AppStrings.getReady,
+                      style: TextStyle(
+                        fontSize: 24,
+                        height: 1.5,
+                        fontWeight: FontWeight.bold,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      AppStrings.getReadySubtitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

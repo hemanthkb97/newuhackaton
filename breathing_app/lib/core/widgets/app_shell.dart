@@ -80,6 +80,7 @@ class AppShell extends StatelessWidget {
 
               // Screen content
               Expanded(child: child),
+              const SizedBox(height: 24),
             ],
           ),
         ),

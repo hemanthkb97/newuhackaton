@@ -199,67 +199,79 @@ class _BreathingView extends StatelessWidget {
       },
       child: BlocBuilder<BreathingBloc, BreathingState>(
         builder: (context, state) {
-          return Center(
-            child: SizedBox(
-              width: 336,
-              height: 543,
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppStrings.encouragingTexts[state.encouragingTextIndex %
-                          AppStrings.encouragingTexts.length],
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.5,
-                        fontFamily: GoogleFonts.lato().fontFamily,
-                        fontStyle: FontStyle.italic,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary,
+          return Scrollbar(
+            thumbVisibility: true,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  primary: true,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Center(
+                      child: SizedBox(
+                        width: 336,
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                AppStrings.encouragingTexts[state.encouragingTextIndex %
+                                    AppStrings.encouragingTexts.length],
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  height: 1.5,
+                                  fontFamily: GoogleFonts.lato().fontFamily,
+                                  fontStyle: FontStyle.italic,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
+                                ),
+                              ),
+                              const SizedBox(height: 53),
+                              SizedBox(
+                                height: 200,
+                                child: Center(
+                                  child: _BreathingCircle(state: state, isDark: isDark),
+                                ),
+                              ),
+                              const SizedBox(height: 53),
+                              Text(
+                                state.phaseDisplayName,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  height: 1.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightPrimary,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                AppStrings.encouragingTexts[(state.encouragingTextIndex +
+                                        1) %
+                                    AppStrings.encouragingTexts.length],
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  height: 1.5,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
+                                ),
+                              ),
+                              const SizedBox(height: 36),
+                              _ProgressSection(state: state, isDark: isDark),
+                              const SizedBox(height: 24),
+                              _PauseResumeButton(state: state, isDark: isDark),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 53),
-                    Expanded(
-                      child: Center(
-                        child: _BreathingCircle(state: state, isDark: isDark),
-                      ),
-                    ),
-
-                    const SizedBox(height: 53),
-                    Text(
-                      state.phaseDisplayName,
-                      style: TextStyle(
-                        fontSize: 24,
-                        height: 1.5,
-                        fontWeight: FontWeight.bold,
-                        color: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      AppStrings.encouragingTexts[(state.encouragingTextIndex +
-                              1) %
-                          AppStrings.encouragingTexts.length],
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.5,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 36),
-                    _ProgressSection(state: state, isDark: isDark),
-                    const SizedBox(height: 24),
-                    _PauseResumeButton(state: state, isDark: isDark),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           );
         },
