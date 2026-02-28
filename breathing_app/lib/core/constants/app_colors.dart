@@ -11,6 +11,7 @@ class AppColors {
   static const lightAccent = Color(0xFFE8A83E);
   static const lightAccentSelected = Color(0xFFF5C76B);
   static const lightTextPrimary = Colors.black;
+  static const lightButtonPrimary = Color(0xff28002A);
   static const lightTextSecondary = Color(0xff737373);
   static const lightCircle = Color(0xFFE8D5F5);
   static const lightCircleInner = Color(0xff7B2D8E);
@@ -24,7 +25,8 @@ class AppColors {
   static const lightBorderSubtle = Color(0xffF5F5F5);
   static const lightBGAccentSubtle = Color(0xffFFF8F0);
   static const lightBGAccentSolid = Color(0xffE47B00);
-  static const lightButtonNatural = Color(0xff141414);
+  static const lightIconNatural = Color(0xff141414);
+
   static const lightBGSubtle = Color(0xffEFE6F0);
 
   // Dark theme

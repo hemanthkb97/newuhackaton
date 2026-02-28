@@ -13,49 +13,37 @@ import 'presentation/screens/result_screen.dart';
 import 'presentation/screens/setup_screen.dart';
 
 final _router = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/result',
   routes: [
     ShellRoute(
-      builder: (context, state, child) =>
-          AppShell(state: state, child: child),
+      builder: (context, state, child) => AppShell(state: state, child: child),
       routes: [
         GoRoute(
           path: '/',
-          pageBuilder: (context, state) => _fadeTransition(
-            state,
-            const SetupScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              _fadeTransition(state, const SetupScreen()),
         ),
         GoRoute(
           path: '/get-ready',
-          pageBuilder: (context, state) => _fadeTransition(
-            state,
-            const GetReadyScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              _fadeTransition(state, const GetReadyScreen()),
         ),
         GoRoute(
           path: '/breathing',
-          pageBuilder: (context, state) => _fadeTransition(
-            state,
-            const BreathingScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              _fadeTransition(state, const BreathingScreen()),
         ),
         GoRoute(
           path: '/result',
-          pageBuilder: (context, state) => _fadeTransition(
-            state,
-            const ResultScreen(),
-          ),
+          pageBuilder: (context, state) =>
+              _fadeTransition(state, const ResultScreen()),
         ),
       ],
     ),
   ],
 );
 
-CustomTransitionPage<void> _fadeTransition(
-  GoRouterState state,
-  Widget child,
-) {
+CustomTransitionPage<void> _fadeTransition(GoRouterState state, Widget child) {
   return CustomTransitionPage<void>(
     key: state.pageKey,
     child: child,

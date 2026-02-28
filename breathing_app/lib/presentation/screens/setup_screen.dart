@@ -531,7 +531,7 @@ class _StepperButton extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: isDark ? Colors.white : AppColors.lightButtonNatural,
+          color: isDark ? Colors.white : AppColors.lightIconNatural,
 
           size: 14,
         ),

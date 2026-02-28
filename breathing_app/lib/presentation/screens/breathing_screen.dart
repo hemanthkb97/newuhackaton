@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -46,10 +47,13 @@ class _BreathingCircle extends StatefulWidget {
 
 class _BreathingCircleState extends State<_BreathingCircle>
     with SingleTickerProviderStateMixin {
-  static const double _minScale = 0.55;
-  static const double _maxScale = 1.0;
+  // Fixed pixel sizes
+  static const double _maxSize = 196.0; // breathe in fully expanded
+  static const double _minSize = 121.0; // breathe out fully shrunk
+  static const double _holdSize = 90.0; // hold phases
+
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+  late Animation<double> _sizeAnimation;
 
   BreathingPhaseType? _lastPhase;
   int? _lastRound;
@@ -57,28 +61,32 @@ class _BreathingCircleState extends State<_BreathingCircle>
 
   @override
   Widget build(BuildContext context) {
-    final maxSize = MediaQuery.of(context).size.width * 0.55;
     final isDark = widget.isDark;
     final s = widget.state;
 
     return AnimatedBuilder(
-      animation: _scaleAnimation,
+      animation: _sizeAnimation,
       builder: (context, child) {
-        final scale = _scaleAnimation.value;
+        final size = _sizeAnimation.value;
         return Container(
-          width: maxSize * scale,
-          height: maxSize * scale,
+          width: size,
+          height: size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
+            border: Border.all(
+              color: isDark
+                  ? AppColors.darkCircleInner.withValues(alpha: 0.25)
+                  : AppColors.lightCircleInner.withValues(alpha: 0.12),
+            ),
             gradient: RadialGradient(
               colors: isDark
                   ? [
-                      AppColors.darkCircleInner.withValues(alpha: 0.9),
-                      AppColors.darkCircle.withValues(alpha: 0.5),
+                      AppColors.darkCircleInner.withValues(alpha: 0.4),
+                      AppColors.darkCircleInner.withValues(alpha: 0.1),
                     ]
                   : [
-                      AppColors.lightCircleInner,
-                      AppColors.lightCircle.withValues(alpha: 0.6),
+                      AppColors.lightCircleInner.withValues(alpha: 0.2),
+                      AppColors.lightCircleInner.withValues(alpha: 0.05),
                     ],
             ),
           ),
@@ -91,8 +99,8 @@ class _BreathingCircleState extends State<_BreathingCircle>
                       '${s.displayCounter}',
                       key: ValueKey(s.displayCounter),
                       style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.w300,
+                        fontSize: 56,
+                        fontWeight: FontWeight.w700,
                         color: isDark
                             ? AppColors.darkTextPrimary
                             : AppColors.lightPrimary,
@@ -139,10 +147,7 @@ class _BreathingCircleState extends State<_BreathingCircle>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
-    _scaleAnimation = Tween<double>(
-      begin: _minScale,
-      end: _minScale,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _sizeAnimation = const AlwaysStoppedAnimation(_minSize);
     _updateAnimation(widget.state);
   }
 
@@ -152,25 +157,23 @@ class _BreathingCircleState extends State<_BreathingCircle>
     switch (s.currentPhaseType) {
       case BreathingPhaseType.breatheIn:
         _controller.duration = Duration(seconds: s.phaseTotalSeconds);
-        _scaleAnimation = Tween<double>(begin: _minScale, end: _maxScale)
-            .animate(
-              CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-            );
+        _sizeAnimation = Tween<double>(begin: _minSize, end: _maxSize).animate(
+          CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+        );
         _controller.forward(from: 0);
         break;
       case BreathingPhaseType.holdIn:
-        _scaleAnimation = AlwaysStoppedAnimation(_maxScale);
+        _sizeAnimation = const AlwaysStoppedAnimation(_holdSize);
         break;
       case BreathingPhaseType.breatheOut:
         _controller.duration = Duration(seconds: s.phaseTotalSeconds);
-        _scaleAnimation = Tween<double>(begin: _maxScale, end: _minScale)
-            .animate(
-              CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-            );
+        _sizeAnimation = Tween<double>(begin: _maxSize, end: _minSize).animate(
+          CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+        );
         _controller.forward(from: 0);
         break;
       case BreathingPhaseType.holdOut:
-        _scaleAnimation = AlwaysStoppedAnimation(_minScale);
+        _sizeAnimation = const AlwaysStoppedAnimation(_holdSize);
         break;
     }
 
@@ -196,52 +199,68 @@ class _BreathingView extends StatelessWidget {
       },
       child: BlocBuilder<BreathingBloc, BreathingState>(
         builder: (context, state) {
-          return Column(
-            children: [
-              const SizedBox(height: 8),
+          return Center(
+            child: SizedBox(
+              width: 336,
+              height: 543,
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppStrings.encouragingTexts[state.encouragingTextIndex %
+                          AppStrings.encouragingTexts.length],
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        fontFamily: GoogleFonts.lato().fontFamily,
+                        fontStyle: FontStyle.italic,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 53),
+                    Expanded(
+                      child: Center(
+                        child: _BreathingCircle(state: state, isDark: isDark),
+                      ),
+                    ),
 
-              // Encouraging text
-              Text(
-                AppStrings.encouragingTexts[state.encouragingTextIndex %
-                    AppStrings.encouragingTexts.length],
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
-              ),
-              const SizedBox(height: 16),
-
-              // Breathing circle
-              Expanded(
-                child: Center(
-                  child: _BreathingCircle(state: state, isDark: isDark),
+                    const SizedBox(height: 53),
+                    Text(
+                      state.phaseDisplayName,
+                      style: TextStyle(
+                        fontSize: 24,
+                        height: 1.5,
+                        fontWeight: FontWeight.bold,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      AppStrings.encouragingTexts[(state.encouragingTextIndex +
+                              1) %
+                          AppStrings.encouragingTexts.length],
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.5,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 36),
+                    _ProgressSection(state: state, isDark: isDark),
+                    const SizedBox(height: 24),
+                    _PauseResumeButton(state: state, isDark: isDark),
+                  ],
                 ),
               ),
-
-              // Phase name
-              Text(
-                state.phaseDisplayName,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 4),
-
-              // Sub-text
-              Text(
-                AppStrings.encouragingTexts[(state.encouragingTextIndex + 1) %
-                    AppStrings.encouragingTexts.length],
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 20),
-
-              // Progress bar
-              _ProgressSection(state: state, isDark: isDark),
-              const SizedBox(height: 20),
-
-              // Pause/Resume button
-              _PauseResumeButton(state: state, isDark: isDark),
-              const SizedBox(height: 32),
-            ],
+            ),
           );
         },
       ),
@@ -270,31 +289,29 @@ class _PauseResumeButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
-          gradient: isDark
-              ? const LinearGradient(
-                  colors: [
-                    AppColors.darkPrimaryGradientStart,
-                    AppColors.darkPrimaryGradientEnd,
-                  ],
-                )
-              : null,
-          color: isDark ? null : AppColors.lightPrimary,
+
+          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              isPaused ? Icons.play_arrow : Icons.pause,
-              color: Colors.white,
-              size: 20,
+              isPaused ? Icons.play_arrow_outlined : Icons.pause_outlined,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightButtonPrimary,
+              size: 24,
             ),
             const SizedBox(width: 8),
             Text(
               isPaused ? AppStrings.resume : AppStrings.pause,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightButtonPrimary,
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                height: 1.5,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
@@ -311,32 +328,74 @@ class _ProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+    return SizedBox(
+      width: 240,
+
       child: Column(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: state.progressFraction,
-              minHeight: 6,
-              backgroundColor: isDark
-                  ? AppColors.darkProgressBg
-                  : AppColors.lightProgressBg,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                isDark
-                    ? AppColors.darkProgressFill
-                    : AppColors.lightProgressFill,
+            child: SizedBox(
+              height: 8,
+              child: CustomPaint(
+                size: const Size(double.infinity, 8),
+                painter: _GradientProgressPainter(
+                  progress: state.progressFraction,
+                  bgColor: isDark
+                      ? AppColors.darkBGSubtle
+                      : AppColors.lightBGSubtle,
+                ),
               ),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Cycle ${state.currentRound} of ${state.totalRounds}',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: TextStyle(
+              fontSize: 12,
+              height: 1.5,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightPrimary,
+            ),
           ),
         ],
       ),
     );
+  }
+}
+
+class _GradientProgressPainter extends CustomPainter {
+  final double progress;
+  final Color bgColor;
+
+  _GradientProgressPainter({required this.progress, required this.bgColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bgPaint = Paint()..color = bgColor;
+    final bgRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      const Radius.circular(4),
+    );
+    canvas.drawRRect(bgRect, bgPaint);
+
+    if (progress > 0) {
+      final fillWidth = size.width * progress.clamp(0.0, 1.0);
+      final fillRect = RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, fillWidth, size.height),
+        const Radius.circular(4),
+      );
+      final fillPaint = Paint()
+        ..shader = const LinearGradient(
+          colors: [Color(0xFFFF8A00), Color(0xFF6C0862)],
+        ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+      canvas.drawRRect(fillRect, fillPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _GradientProgressPainter oldDelegate) {
+    return oldDelegate.progress != progress || oldDelegate.bgColor != bgColor;
   }
 }

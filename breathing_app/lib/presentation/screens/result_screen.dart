@@ -1,6 +1,7 @@
 import 'package:dotlottie_loader/dotlottie_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
@@ -16,114 +17,136 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeCubit>().isDark;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          const Spacer(flex: 2),
-
-          // Lottie animation
-          SizedBox(
-            width: 150,
-            height: 150,
-            child: DotLottieLoader.fromAsset(
-              AppAssets.successLottie,
-              frameBuilder: (context, dotlottie) {
-                if (dotlottie != null) {
-                  return Lottie.memory(
-                    dotlottie.animations.values.single,
-                    repeat: false,
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Title
-          Text(
-            isDark ? AppStrings.youDidIt : AppStrings.youDidItEmoji,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 12),
-
-          // Subtitle
-          Text(
-            AppStrings.resultSubtitle,
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.center,
-          ),
-
-          const Spacer(flex: 3),
-
-          // Start again button
-          Container(
-            width: double.infinity,
-            height: 56,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
-              gradient: isDark
-                  ? const LinearGradient(
-                      colors: [
-                        AppColors.darkPrimaryGradientStart,
-                        AppColors.darkPrimaryGradientEnd,
-                      ],
-                    )
-                  : null,
-              color: isDark ? null : AppColors.lightPrimary,
-            ),
-            child: ElevatedButton(
-              onPressed: () => context.go('/get-ready'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(28),
+    return Center(
+      child: SizedBox(
+        width: 336,
+        height: 543,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 150,
+                height: 150,
+                child: DotLottieLoader.fromAsset(
+                  AppAssets.successLottie,
+                  frameBuilder: (context, dotlottie) {
+                    if (dotlottie != null) {
+                      return Lottie.memory(
+                        dotlottie.animations.values.single,
+                        repeat: false,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
               ),
-              child: const Text(
-                AppStrings.startAgain,
+              const SizedBox(height: 24),
+              Text(
+                isDark ? AppStrings.youDidIt : AppStrings.youDidItEmoji,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  height: 1.5,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 12),
+              const SizedBox(height: 16),
+              Text(
+                AppStrings.resultSubtitle,
 
-          // Back to setup button
-          OutlinedButton(
-            onPressed: () => context.go('/'),
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 56),
-              side: BorderSide(
-                color: isDark
-                    ? AppColors.darkChipBorder
-                    : AppColors.lightChipBorder,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28),
-              ),
-            ),
-            child: Text(
-              AppStrings.backToSetUp,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.lightPrimary,
-              ),
-            ),
-          ),
+                style: TextStyle(
+                  fontSize: 14,
 
-          const SizedBox(height: 32),
-        ],
+                  height: 1.5,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Container(
+                height: 56,
+                width: 271,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
+                ),
+                child: ElevatedButton(
+                  onPressed: () => context.go('/get-ready'),
+
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        AppStrings.startAgain,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SvgPicture.asset(
+                        AppAssets.fastWind,
+                        fit: BoxFit.cover,
+                        width: 24,
+                        height: 24,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Container(
+                height: 56,
+                width: 197,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+
+                  color: isDark
+                      ? AppColors.chipNaturalBg
+                      : AppColors.lightBorderSubtle,
+                ),
+                child: ElevatedButton(
+                  onPressed: () => context.go('/'),
+
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                  ),
+                  child: Text(
+                    AppStrings.backToSetUp,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

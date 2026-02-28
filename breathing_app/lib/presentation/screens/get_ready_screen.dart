@@ -61,20 +61,26 @@ class _CountdownCircle extends StatelessWidget {
                 key: ValueKey(count),
                 style: TextStyle(
                   fontSize: 56,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: FontWeight.w700,
                   color: isDark
                       ? AppColors.darkTextPrimary
                       : AppColors.lightPrimary,
                 ),
               ),
             ),
-            if (count > 0)
-              Text(
-                'sec',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.darkTextPrimary : Colors.black,
+            SizedBox(height: 10),
+            if (isDark)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  'sec',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                  ),
                 ),
               ),
           ],
