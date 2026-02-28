@@ -156,14 +156,17 @@ class ResultScreen extends StatelessWidget {
                             ),
                           ),
                         if (kIsWeb)
-                          Text(
-                            AppStrings.backHome,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightPrimary,
+                          GestureDetector(
+                            onTap: () => context.go('/'),
+                            child: Text(
+                              AppStrings.backHome,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightPrimary,
+                              ),
                             ),
                           ),
                       ],

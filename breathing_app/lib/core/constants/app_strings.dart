@@ -48,6 +48,20 @@ class AppStrings {
     'beautifully done',
   ];
 
+  // Logs screen
+  static const viewLogs = 'View Logs';
+  static const breathingLogs = 'Breathing Logs';
+  static const yourSessionHistory = 'Your session history';
+  static const clearAll = 'Clear All';
+  static const clearAllLogs = 'Clear All Logs';
+  static const clearAllConfirmation =
+      'Are you sure you want to delete all session logs?';
+  static const cancel = 'Cancel';
+  static const completed = 'Completed';
+  static const canceled = 'Canceled';
+  static const noSessionsRecorded = 'No sessions recorded yet';
+  static const noPauses = 'No pauses';
+
   // Result screen
   static const youDidIt = 'You did it!';
   static const youDidItEmoji = 'You did it! \u{1F389}';

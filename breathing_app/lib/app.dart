@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/app_shell.dart';
 import 'injection_container.dart';
+import 'presentation/blocs/logs/breathing_logs_cubit.dart';
 import 'presentation/blocs/setup/setup_cubit.dart';
 import 'presentation/blocs/theme/theme_cubit.dart';
 import 'presentation/screens/breathing_screen.dart';
 import 'presentation/screens/get_ready_screen.dart';
+import 'presentation/screens/logs_screen.dart';
 import 'presentation/screens/result_screen.dart';
 import 'presentation/screens/setup_screen.dart';
 
@@ -38,6 +40,11 @@ final _router = GoRouter(
           pageBuilder: (context, state) =>
               _fadeTransition(state, const ResultScreen()),
         ),
+        GoRoute(
+          path: '/logs',
+          pageBuilder: (context, state) =>
+              _fadeTransition(state, const LogsScreen()),
+        ),
       ],
     ),
   ],
@@ -63,6 +70,7 @@ class BreathingApp extends StatelessWidget {
       providers: [
         BlocProvider.value(value: sl<ThemeCubit>()),
         BlocProvider.value(value: sl<SetupCubit>()),
+        BlocProvider.value(value: sl<BreathingLogsCubit>()),
       ],
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, isDark) {

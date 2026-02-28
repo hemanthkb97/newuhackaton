@@ -12,6 +12,7 @@ class BreathingBloc extends Bloc<BreathingEvent, BreathingState> {
   late BreathingSession _session;
   final AudioPlayer _audioPlayer = AudioPlayer();
   int _encouragingIndex = 0;
+  DateTime? _lastPauseTime;
 
   BreathingBloc() : super(const BreathingState()) {
     on<StartBreathing>(_onStart);
@@ -146,11 +147,25 @@ class BreathingBloc extends Bloc<BreathingEvent, BreathingState> {
 
   void _onPause(PauseBreathing event, Emitter<BreathingState> emit) {
     _timer?.cancel();
-    emit(state.copyWith(status: BreathingStatus.paused));
+    _lastPauseTime = DateTime.now();
+    emit(state.copyWith(
+      status: BreathingStatus.paused,
+      pauseCount: state.pauseCount + 1,
+    ));
   }
 
   void _onResume(ResumeBreathing event, Emitter<BreathingState> emit) {
-    emit(state.copyWith(status: BreathingStatus.running));
+    int additionalPauseDuration = 0;
+    if (_lastPauseTime != null) {
+      additionalPauseDuration =
+          DateTime.now().difference(_lastPauseTime!).inSeconds;
+      _lastPauseTime = null;
+    }
+    emit(state.copyWith(
+      status: BreathingStatus.running,
+      totalPauseDurationSeconds:
+          state.totalPauseDurationSeconds + additionalPauseDuration,
+    ));
     _startTimer();
   }
 

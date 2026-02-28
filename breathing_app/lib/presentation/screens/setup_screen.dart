@@ -12,6 +12,17 @@ import '../blocs/setup/setup_cubit.dart';
 import '../blocs/setup/setup_state.dart';
 import '../blocs/theme/theme_cubit.dart';
 
+void _unlockWebAudio() async {
+  try {
+    final player = AudioPlayer();
+    await player.setVolume(0);
+    await player.play(AssetSource('audio/chime.mp3'));
+    await Future.delayed(const Duration(milliseconds: 100));
+    await player.stop();
+    player.dispose();
+  } catch (_) {}
+}
+
 class SetupScreen extends StatelessWidget {
   const SetupScreen({super.key});
 
@@ -128,6 +139,8 @@ class SetupScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 _StartButton(isDark: isDark),
+                const SizedBox(height: 12),
+                _ViewLogsButton(isDark: isDark),
               ],
             ),
           ),
@@ -456,17 +469,6 @@ class _SoundToggleState extends State<_SoundToggle> {
   }
 }
 
-void _unlockWebAudio() async {
-  try {
-    final player = AudioPlayer();
-    await player.setVolume(0);
-    await player.play(AssetSource('audio/chime.mp3'));
-    await Future.delayed(const Duration(milliseconds: 100));
-    await player.stop();
-    player.dispose();
-  } catch (_) {}
-}
-
 class _StartButton extends StatelessWidget {
   final bool isDark;
   const _StartButton({required this.isDark});
@@ -547,6 +549,45 @@ class _StepperButton extends StatelessWidget {
           color: isDark ? Colors.white : AppColors.lightIconNatural,
 
           size: 14,
+        ),
+      ),
+    );
+  }
+}
+
+class _ViewLogsButton extends StatelessWidget {
+  final bool isDark;
+  const _ViewLogsButton({required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 56,
+      width: 197,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+
+        color: isDark ? AppColors.chipNaturalBg : AppColors.lightBorderSubtle,
+      ),
+      child: ElevatedButton(
+        onPressed: () => context.go('/logs'),
+
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+        ),
+        child: Text(
+          AppStrings.viewLogs,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
+          ),
         ),
       ),
     );

@@ -20,6 +20,10 @@ class BreathingState extends Equatable {
   final int breatheOutDuration;
   final int holdOutDuration;
 
+  // Pause tracking
+  final int pauseCount;
+  final int totalPauseDurationSeconds;
+
   const BreathingState({
     this.status = BreathingStatus.idle,
     this.currentPhaseType = BreathingPhaseType.breatheIn,
@@ -34,6 +38,8 @@ class BreathingState extends Equatable {
     this.holdInDuration = 4,
     this.breatheOutDuration = 4,
     this.holdOutDuration = 4,
+    this.pauseCount = 0,
+    this.totalPauseDurationSeconds = 0,
   });
 
   BreathingState copyWith({
@@ -50,6 +56,8 @@ class BreathingState extends Equatable {
     int? holdInDuration,
     int? breatheOutDuration,
     int? holdOutDuration,
+    int? pauseCount,
+    int? totalPauseDurationSeconds,
   }) {
     return BreathingState(
       status: status ?? this.status,
@@ -65,6 +73,9 @@ class BreathingState extends Equatable {
       holdInDuration: holdInDuration ?? this.holdInDuration,
       breatheOutDuration: breatheOutDuration ?? this.breatheOutDuration,
       holdOutDuration: holdOutDuration ?? this.holdOutDuration,
+      pauseCount: pauseCount ?? this.pauseCount,
+      totalPauseDurationSeconds:
+          totalPauseDurationSeconds ?? this.totalPauseDurationSeconds,
     );
   }
 
@@ -115,5 +126,7 @@ class BreathingState extends Equatable {
         holdInDuration,
         breatheOutDuration,
         holdOutDuration,
+        pauseCount,
+        totalPauseDurationSeconds,
       ];
 }

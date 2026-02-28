@@ -10,6 +10,7 @@ import '../../domain/entities/breathing_session.dart';
 import '../blocs/breathing/breathing_bloc.dart';
 import '../blocs/breathing/breathing_event.dart';
 import '../blocs/breathing/breathing_state.dart';
+import '../blocs/logs/breathing_logs_cubit.dart';
 import '../blocs/setup/setup_cubit.dart';
 import '../blocs/theme/theme_cubit.dart';
 
@@ -183,20 +184,41 @@ class _BreathingCircleState extends State<_BreathingCircle>
   }
 }
 
-class _BreathingView extends StatelessWidget {
+class _BreathingView extends StatefulWidget {
   const _BreathingView();
+
+  @override
+  State<_BreathingView> createState() => _BreathingViewState();
+}
+
+class _BreathingViewState extends State<_BreathingView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<BreathingLogsCubit>().startTrackingSession(DateTime.now());
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeCubit>().isDark;
 
-    return BlocListener<BreathingBloc, BreathingState>(
-      listenWhen: (prev, curr) => prev.status != curr.status,
-      listener: (context, state) {
-        if (state.status == BreathingStatus.completed) {
-          context.go('/result');
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<BreathingBloc, BreathingState>(
+          listenWhen: (prev, curr) => prev.status != curr.status,
+          listener: (context, state) {
+            if (state.status == BreathingStatus.completed) {
+              context.read<BreathingLogsCubit>().saveCompletedSession();
+              context.go('/result');
+            }
+          },
+        ),
+        BlocListener<BreathingBloc, BreathingState>(
+          listener: (context, state) {
+            context.read<BreathingLogsCubit>().updateSessionSnapshot(state);
+          },
+        ),
+      ],
       child: BlocBuilder<BreathingBloc, BreathingState>(
         builder: (context, state) {
           return Scrollbar(

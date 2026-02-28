@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../presentation/blocs/logs/breathing_logs_cubit.dart';
 import '../../presentation/blocs/theme/theme_cubit.dart';
 import '../constants/app_colors.dart';
 import 'cloud_background.dart';
@@ -17,6 +18,7 @@ class AppShell extends StatelessWidget {
     final isDark = context.watch<ThemeCubit>().isDark;
     final location = state.uri.path;
     final showClose = location == '/get-ready' || location == '/breathing';
+    final showBack = location == '/logs';
 
     return Scaffold(
       body: CloudBackground(
@@ -34,7 +36,14 @@ class AppShell extends StatelessWidget {
                   children: [
                     if (showClose)
                       GestureDetector(
-                        onTap: () => context.go('/'),
+                        onTap: () {
+                          if (location == '/breathing') {
+                            context
+                                .read<BreathingLogsCubit>()
+                                .saveCanceledSession();
+                          }
+                          context.go('/');
+                        },
                         child: Container(
                           width: 36,
                           height: 36,
@@ -46,6 +55,25 @@ class AppShell extends StatelessWidget {
                           ),
                           child: Icon(
                             Icons.close,
+                            size: 20,
+                            color: AppColors.iconSecondary,
+                          ),
+                        ),
+                      )
+                    else if (showBack)
+                      GestureDetector(
+                        onTap: () => context.go('/'),
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isDark
+                                ? AppColors.darkBGSubtle
+                                : AppColors.lightBGSubtle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
                             size: 20,
                             color: AppColors.iconSecondary,
                           ),
