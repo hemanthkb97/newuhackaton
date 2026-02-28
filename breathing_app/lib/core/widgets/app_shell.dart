@@ -108,7 +108,14 @@ class AppShell extends StatelessWidget {
               ),
 
               // Screen content
-              Expanded(child: child),
+              Expanded(
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: child,
+                  ),
+                ),
+              ),
               const SizedBox(height: 24),
             ],
           ),
