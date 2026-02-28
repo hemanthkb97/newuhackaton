@@ -25,117 +25,104 @@ class SetupScreen extends StatelessWidget {
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: EdgeInsetsGeometry.only(
-                        bottom: 18,
-                        right: 53,
-                        left: 53,
-                      ),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Text(
-                              AppStrings.setYourPace,
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w700,
-                                color: isDark
-                                    ? AppColors.darkTextPrimary
-                                    : AppColors.lightPrimary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    bottom: 18,
+                    right: 53,
+                    left: 53,
+                  ),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          AppStrings.setYourPace,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightPrimary,
                           ),
-                          const SizedBox(height: 10),
-                          Center(
-                            child: Text(
-                              AppStrings.customiseSubtitle,
-                              style: TextStyle(
-                                fontSize: 14,
-
-                                color: isDark
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 400, minWidth: 320),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 27,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        border: Border.all(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.06)
-                              : Colors.black.withValues(alpha: 0.04),
+                          textAlign: TextAlign.center,
                         ),
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.05)
-                            : Colors.white.withValues(alpha: 0.7),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _SectionLabel(
-                            isDark: isDark,
-                            title: AppStrings.breathDuration,
-                            subtitle: AppStrings.secondsPerPhase,
-                          ),
-                          const SizedBox(height: 10),
-                          _DurationChips(
-                            options: const [3, 4, 5, 6],
-                            labels: const ['3s', '4s', '5s', '6s'],
-                            selected: state.breathDuration,
-                            isDark: isDark,
-                            onSelected: (val) => context
-                                .read<SetupCubit>()
-                                .setBreathDuration(val),
-                          ),
-                          const SizedBox(height: 12),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: Text(
+                          AppStrings.customiseSubtitle,
+                          style: TextStyle(
+                            fontSize: 14,
 
-                          // Rounds
-                          _SectionLabel(
-                            isDark: isDark,
-                            title: AppStrings.rounds,
-                            subtitle: AppStrings.fullBreathingCycles,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
-                          const SizedBox(height: 10),
-                          _DurationChips(
-                            options: const [2, 4, 6, 8],
-                            labels: const [
-                              '2 quick',
-                              '4 calm',
-                              '6 deep',
-                              '8 zen',
-                            ],
-                            selected: state.rounds,
-                            isDark: isDark,
-                            onSelected: (val) =>
-                                context.read<SetupCubit>().setRounds(val),
-                          ),
-                          const SizedBox(height: 12),
-                          _AdvancedTimingSection(state: state, isDark: isDark),
-                          const SizedBox(height: 12),
-                          _SoundToggle(
-                            enabled: state.soundEnabled,
-                            isDark: isDark,
-                          ),
-                        ],
+                          textAlign: TextAlign.center,
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+                Container(
+                  constraints: BoxConstraints(maxWidth: 400, minWidth: 320),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 27,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.06)
+                          : Colors.black.withValues(alpha: 0.04),
                     ),
-                  ],
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.05)
+                        : Colors.white.withValues(alpha: 0.7),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _SectionLabel(
+                        isDark: isDark,
+                        title: AppStrings.breathDuration,
+                        subtitle: AppStrings.secondsPerPhase,
+                      ),
+                      const SizedBox(height: 10),
+                      _DurationChips(
+                        options: const [3, 4, 5, 6],
+                        labels: const ['3s', '4s', '5s', '6s'],
+                        selected: state.breathDuration,
+                        isDark: isDark,
+                        onSelected: (val) =>
+                            context.read<SetupCubit>().setBreathDuration(val),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Rounds
+                      _SectionLabel(
+                        isDark: isDark,
+                        title: AppStrings.rounds,
+                        subtitle: AppStrings.fullBreathingCycles,
+                      ),
+                      const SizedBox(height: 10),
+                      _DurationChips(
+                        options: const [2, 4, 6, 8],
+                        labels: const ['2 quick', '4 calm', '6 deep', '8 zen'],
+                        selected: state.rounds,
+                        isDark: isDark,
+                        onSelected: (val) =>
+                            context.read<SetupCubit>().setRounds(val),
+                      ),
+                      const SizedBox(height: 12),
+                      _AdvancedTimingSection(state: state, isDark: isDark),
+                      const SizedBox(height: 12),
+                      _SoundToggle(enabled: state.soundEnabled, isDark: isDark),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 18),
                 _StartButton(isDark: isDark),

@@ -268,6 +268,41 @@ class _BreathingView extends StatelessWidget {
   }
 }
 
+class _GradientProgressPainter extends CustomPainter {
+  final double progress;
+  final Color bgColor;
+
+  _GradientProgressPainter({required this.progress, required this.bgColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bgPaint = Paint()..color = bgColor;
+    final bgRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      const Radius.circular(4),
+    );
+    canvas.drawRRect(bgRect, bgPaint);
+
+    if (progress > 0) {
+      final fillWidth = size.width * progress.clamp(0.0, 1.0);
+      final fillRect = RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, fillWidth, size.height),
+        const Radius.circular(4),
+      );
+      final fillPaint = Paint()
+        ..shader = const LinearGradient(
+          colors: [Color(0xFFFF8A00), Color(0xFF6C0862)],
+        ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+      canvas.drawRRect(fillRect, fillPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _GradientProgressPainter oldDelegate) {
+    return oldDelegate.progress != progress || oldDelegate.bgColor != bgColor;
+  }
+}
+
 class _PauseResumeButton extends StatelessWidget {
   final BreathingState state;
   final bool isDark;
@@ -290,7 +325,7 @@ class _PauseResumeButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
 
-          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+          color: isDark ? AppColors.darkPrimary : AppColors.lightBGSubtle,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -362,40 +397,5 @@ class _ProgressSection extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class _GradientProgressPainter extends CustomPainter {
-  final double progress;
-  final Color bgColor;
-
-  _GradientProgressPainter({required this.progress, required this.bgColor});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bgPaint = Paint()..color = bgColor;
-    final bgRect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(0, 0, size.width, size.height),
-      const Radius.circular(4),
-    );
-    canvas.drawRRect(bgRect, bgPaint);
-
-    if (progress > 0) {
-      final fillWidth = size.width * progress.clamp(0.0, 1.0);
-      final fillRect = RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, fillWidth, size.height),
-        const Radius.circular(4),
-      );
-      final fillPaint = Paint()
-        ..shader = const LinearGradient(
-          colors: [Color(0xFFFF8A00), Color(0xFF6C0862)],
-        ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-      canvas.drawRRect(fillRect, fillPaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _GradientProgressPainter oldDelegate) {
-    return oldDelegate.progress != progress || oldDelegate.bgColor != bgColor;
   }
 }
