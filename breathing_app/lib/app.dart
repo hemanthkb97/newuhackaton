@@ -19,23 +19,52 @@ final _router = GoRouter(
       builder: (context, state, child) =>
           AppShell(state: state, child: child),
       routes: [
-        GoRoute(path: '/', builder: (context, state) => const SetupScreen()),
+        GoRoute(
+          path: '/',
+          pageBuilder: (context, state) => _fadeTransition(
+            state,
+            const SetupScreen(),
+          ),
+        ),
         GoRoute(
           path: '/get-ready',
-          builder: (context, state) => const GetReadyScreen(),
+          pageBuilder: (context, state) => _fadeTransition(
+            state,
+            const GetReadyScreen(),
+          ),
         ),
         GoRoute(
           path: '/breathing',
-          builder: (context, state) => const BreathingScreen(),
+          pageBuilder: (context, state) => _fadeTransition(
+            state,
+            const BreathingScreen(),
+          ),
         ),
         GoRoute(
           path: '/result',
-          builder: (context, state) => const ResultScreen(),
+          pageBuilder: (context, state) => _fadeTransition(
+            state,
+            const ResultScreen(),
+          ),
         ),
       ],
     ),
   ],
 );
+
+CustomTransitionPage<void> _fadeTransition(
+  GoRouterState state,
+  Widget child,
+) {
+  return CustomTransitionPage<void>(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: const Duration(milliseconds: 300),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}
 
 class BreathingApp extends StatelessWidget {
   const BreathingApp({super.key});

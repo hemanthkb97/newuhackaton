@@ -36,20 +36,18 @@ class AppShell extends StatelessWidget {
                       GestureDetector(
                         onTap: () => context.go('/'),
                         child: Container(
-                          width: 42,
-                          height: 42,
+                          width: 36,
+                          height: 36,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: isDark
-                                ? Colors.white.withValues(alpha: 0.15)
-                                : Colors.black.withValues(alpha: 0.08),
+                                ? AppColors.darkBGSubtle
+                                : AppColors.lightBGSubtle,
                           ),
                           child: Icon(
                             Icons.close,
                             size: 20,
-                            color: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightPrimary,
+                            color: AppColors.iconSecondary,
                           ),
                         ),
                       )

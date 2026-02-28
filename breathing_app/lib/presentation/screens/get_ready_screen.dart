@@ -26,23 +26,27 @@ class _CountdownCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size.width * 0.5;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
-      width: size,
-      height: size,
+      width: 196,
+      height: 196,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
+        border: Border.all(
+          color: isDark
+              ? AppColors.darkCircleInner.withValues(alpha: 0.25)
+              : AppColors.lightCircleInner.withValues(alpha: 0.12),
+        ),
         gradient: RadialGradient(
           colors: isDark
               ? [
-                  AppColors.darkCircleInner.withValues(alpha: 0.8),
-                  AppColors.darkCircle.withValues(alpha: 0.5),
+                  AppColors.darkCircleInner.withValues(alpha: 0.4),
+                  AppColors.darkCircleInner.withValues(alpha: 0.1),
                 ]
               : [
-                  AppColors.lightCircleInner,
-                  AppColors.lightCircle.withValues(alpha: 0.6),
+                  AppColors.lightCircleInner.withValues(alpha: 0.2),
+                  AppColors.lightCircleInner.withValues(alpha: 0.05),
                 ],
         ),
       ),
@@ -68,10 +72,9 @@ class _CountdownCircle extends StatelessWidget {
               Text(
                 'sec',
                 style: TextStyle(
-                  fontSize: 14,
-                  color: isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary,
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? AppColors.darkTextPrimary : Colors.black,
                 ),
               ),
           ],
@@ -95,34 +98,36 @@ class _GetReadyView extends StatelessWidget {
         }
       },
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Spacer(flex: 2),
-
-          // Countdown circle
           BlocBuilder<CountdownCubit, int>(
             builder: (context, count) {
-              return _CountdownCircle(
-                count: count,
-                isDark: isDark,
-              );
+              return _CountdownCircle(count: count, isDark: isDark);
             },
           ),
-          const SizedBox(height: 40),
-
-          // Title
+          const SizedBox(height: 53),
           Text(
             AppStrings.getReady,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: TextStyle(
+              fontSize: 24,
+              height: 1.5,
+              fontWeight: FontWeight.bold,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightPrimary,
+            ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             AppStrings.getReadySubtitle,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.5,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+            ),
           ),
-
-          const Spacer(flex: 3),
         ],
       ),
     );
