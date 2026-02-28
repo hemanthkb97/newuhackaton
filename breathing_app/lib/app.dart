@@ -54,9 +54,31 @@ CustomTransitionPage<void> _fadeTransition(GoRouterState state, Widget child) {
   return CustomTransitionPage<void>(
     key: state.pageKey,
     child: child,
+    opaque: false,
     transitionDuration: const Duration(milliseconds: 300),
+    reverseTransitionDuration: const Duration(milliseconds: 200),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return FadeTransition(opacity: animation, child: child);
+      final fadeIn = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+      );
+      final fadeOut = CurvedAnimation(
+        parent: secondaryAnimation,
+        curve: Curves.easeInCubic,
+      );
+      return FadeTransition(
+        opacity: Tween<double>(begin: 1.0, end: 0.0).animate(fadeOut),
+        child: FadeTransition(
+          opacity: Tween<double>(begin: 0.0, end: 1.0).animate(fadeIn),
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 0.03),
+              end: Offset.zero,
+            ).animate(fadeIn),
+            child: child,
+          ),
+        ),
+      );
     },
   );
 }
