@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../domain/entities/breathing_phase.dart';
@@ -364,12 +366,16 @@ class _PauseResumeButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isPaused ? Icons.play_arrow_outlined : Icons.pause_outlined,
-              color: isDark
-                  ? AppColors.darkTextPrimary
-                  : AppColors.lightButtonPrimary,
-              size: 24,
+            SvgPicture.asset(
+              isPaused ? AppAssets.playIcon : AppAssets.pauseIcon,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightButtonPrimary,
+                BlendMode.srcIn,
+              ),
             ),
             const SizedBox(width: 8),
             Text(

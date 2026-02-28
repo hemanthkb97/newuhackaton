@@ -15,40 +15,41 @@ class CloudBackground extends StatelessWidget {
       children: [
         Positioned.fill(
           child: isDark
-              ?
-                // Container(
-                //     decoration: const BoxDecoration(
-                //       gradient: LinearGradient(
-                //         begin: Alignment.topCenter,
-                //         end: Alignment.bottomCenter,
-                //         colors: [
-                //           Color(0xFF1A1128),
-                //           Color(0xFF2D1B4E),
-                //           Color(0xFF3A2260),
-                //         ],
-                //       ),
-                //     ),
-                //   )
-                SvgPicture.asset(
-                  AppAssets.darkModeBg,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
+              ? Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.0, 0.4, 1.0],
+                      colors: [
+                        Color(0xFF1A1128),
+                        Color(0xFF2D1B4E),
+                        Color(0xFF3A2260),
+                      ],
+                    ),
+                  ),
                 )
-              : SvgPicture.asset(
-                  AppAssets.lightBackground,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
+              : Container(
+                  color: const Color(0xFFFFFFFF),
+                  foregroundDecoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      stops: const [0.3121, 0.6944],
+                      colors: [
+                        const Color(0xFF630068).withValues(alpha: 0.08),
+                        const Color(0xFFFF8A00).withValues(alpha: 0.08),
+                      ],
+                    ),
+                  ),
                 ),
         ),
 
-        // Stars overlay for dark mode
+        if (isDark)
+          ..._buildDarkClouds(context)
+        else
+          ..._buildLightClouds(context),
 
-        // Small scattered clouds on top (dark mode only)
-        if (isDark) ..._buildDarkClouds(context) else ..._buildLightClouds(),
-
-        // Content
         Positioned.fill(child: child),
 
         if (isDark)
@@ -62,6 +63,9 @@ class CloudBackground extends StatelessWidget {
   }
 
   List<Widget> _buildDarkClouds(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final isWide = size.width > 600;
+
     return [
       Positioned(
         top: -10,
@@ -69,17 +73,17 @@ class CloudBackground extends StatelessWidget {
         child: SvgPicture.asset(AppAssets.darkModeMedium),
       ),
       Positioned(
-        top: MediaQuery.sizeOf(context).height * 0.1,
+        top: size.height * 0.1,
         left: -10,
         child: SvgPicture.asset(width: 200, AppAssets.darkSmallCloud1),
       ),
       Positioned(
-        top: MediaQuery.sizeOf(context).height * 0.45,
+        top: size.height * 0.45,
         left: -10,
         child: SvgPicture.asset(AppAssets.darkSmallCloud2),
       ),
       Positioned(
-        top: MediaQuery.sizeOf(context).height * 0.22,
+        top: size.height * 0.22,
         right: -10,
         child: SvgPicture.asset(AppAssets.darkSmallCloud2),
       ),
@@ -93,42 +97,97 @@ class CloudBackground extends StatelessWidget {
         left: -20,
         child: SvgPicture.asset(AppAssets.darkModeMedium),
       ),
-
       Positioned(
-        top: MediaQuery.sizeOf(context).height * 0.22 + 15,
+        top: size.height * 0.22 + 15,
         right: -30,
         child: SvgPicture.asset(AppAssets.darkCloud2),
       ),
       Positioned(
-        top: MediaQuery.sizeOf(context).height * 0.45 + 10,
+        top: size.height * 0.45 + 10,
         left: -10,
         child: SvgPicture.asset(AppAssets.darkCloud1),
       ),
+
+      if (isWide)
+        Positioned(
+          top: size.height * 0.15,
+          left: size.width * 0.3,
+          child: SvgPicture.asset(AppAssets.darkSmallCloud1, width: 160),
+        ),
+      if (isWide)
+        Positioned(
+          top: size.height * 0.55,
+          left: size.width * 0.5,
+          child: SvgPicture.asset(AppAssets.darkSmallCloud2, width: 140),
+        ),
     ];
   }
 
-  List<Widget> _buildLightClouds() {
+  List<Widget> _buildLightClouds(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final isWide = size.width > 600;
+
     return [
       Positioned(
-        top: 11,
-        right: -12,
+        top: -10,
+        right: -20,
         child: SvgPicture.asset(AppAssets.bigCloud, fit: BoxFit.fitWidth),
       ),
+
       Positioned(
-        bottom: 0,
-        right: -10,
-        child: SvgPicture.asset(AppAssets.mediumBottomCloud, width: 200),
+        top: size.height * 0.1,
+        left: -10,
+        child: SvgPicture.asset(AppAssets.cloud1, width: 120),
       ),
+
       Positioned(
-        top: 60,
-        right: -20,
+        top: size.height * 0.25,
+        left: -20,
+        child: SvgPicture.asset(AppAssets.cloud2, width: 160),
+      ),
+
+      Positioned(
+        top: size.height * 0.22,
+        right: -10,
         child: SvgPicture.asset(AppAssets.smallCloud, width: 100),
       ),
+
       Positioned(
-        top: 120,
-        left: -15,
-        child: SvgPicture.asset(AppAssets.cloud1, width: 80),
+        top: size.height * 0.45,
+        left: -10,
+        child: SvgPicture.asset(AppAssets.cloud3, width: 140),
       ),
+
+      Positioned(
+        top: size.height * 0.45 + 10,
+        right: -30,
+        child: SvgPicture.asset(AppAssets.cloud1Alt, width: 120),
+      ),
+
+      Positioned(
+        bottom: 90,
+        left: -20,
+        child: SvgPicture.asset(AppAssets.mediumBottomCloud, width: 200),
+      ),
+
+      Positioned(
+        bottom: 0,
+        right: -50,
+        child: SvgPicture.asset(AppAssets.bottomCloud),
+      ),
+
+      if (isWide)
+        Positioned(
+          top: size.height * 0.15,
+          left: size.width * 0.3,
+          child: SvgPicture.asset(AppAssets.cloud2, width: 150),
+        ),
+      if (isWide)
+        Positioned(
+          top: size.height * 0.55,
+          left: size.width * 0.5,
+          child: SvgPicture.asset(AppAssets.cloud3, width: 130),
+        ),
     ];
   }
 }

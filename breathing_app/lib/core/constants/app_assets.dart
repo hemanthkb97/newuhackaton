@@ -1,6 +1,5 @@
 class AppAssets {
   // SVGs - Light
-  static const lightBackground = 'assets/svg/light_background.svg';
   static const bigCloud = 'assets/svg/big_cloud.svg';
   static const bottomCloud = 'assets/svg/bottom_cloud.svg';
   static const cloud1 = 'assets/svg/cloud_1.svg';
@@ -11,11 +10,9 @@ class AppAssets {
   static const mediumBottomCloud = 'assets/svg/medium_bottom_cloud.svg';
 
   // SVGs - Dark
-  static const darkModeBg = 'assets/svg/dark_mode_bg.svg';
   static const darkCloud1 = 'assets/svg/dark_cloud_1.svg';
   static const darkCloud2 = 'assets/svg/dark_cloud_2.svg';
   static const darkModeCloud = 'assets/svg/dark_mode_cloud.svg';
-  static const darkModeIcon = 'assets/svg/dark_mode_icon.svg';
   static const darkModeMedium = 'assets/svg/dark_mode_medium.svg';
   static const darkSmallCloud1 = 'assets/svg/dark_small_cloud_1.svg';
   static const darkSmallCloud2 = 'assets/svg/dark_small_cloud_2.svg';
@@ -28,4 +25,10 @@ class AppAssets {
   static const chimeSound = 'assets/audio/chime.mp3';
 
   static const fastWind = 'assets/svg/fast-wind.svg';
+
+  // Icons
+  static const sunIcon = 'assets/svg/sun.svg';
+  static const moonIcon = 'assets/svg/moon.svg';
+  static const pauseIcon = 'assets/svg/pause.svg';
+  static const playIcon = 'assets/svg/play.svg';
 }
